@@ -1,0 +1,3 @@
+name: pulumi_amplify_example
+runtime: python
+description: A sample Pulumi program which demonstrates use the pulumi_amplify package
