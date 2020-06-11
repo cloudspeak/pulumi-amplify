@@ -48,7 +48,7 @@ class AmplifyExportsFileProvider(ResourceProvider):
     """
 
     def create(self, inputs: Dict[str, Any]) -> CreateResult:
-        file_inputs = inputs.parameters
+        file_inputs = inputs["parameters"]
 
         file_content = [
             "/* eslint-disable */",
@@ -64,7 +64,7 @@ class AmplifyExportsFileProvider(ResourceProvider):
             "",
             "export default awsmobile;",
         ]
-        exports_file_path = Path(inputs.exports_file_path)
+        exports_file_path = Path(inputs["exports_file_path"])
         exports_file_path.write_text("\n".join(file_content))
         return CreateResult(exports_file_path.name, {})
 

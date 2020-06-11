@@ -2,10 +2,11 @@ from pathlib import Path
 from re import match
 
 import pulumi
-from amplify_exports_file import AmplifyExportsFile
 from pulumi import ResourceOptions
 from pulumi_aws import appsync, config, dynamodb, iam
 from pulumi_aws.get_caller_identity import get_caller_identity
+
+from .amplify_exports_file import AmplifyExportsFile
 
 
 class AmplifyGraphQLAPI(pulumi.ComponentResource):

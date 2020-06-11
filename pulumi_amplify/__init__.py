@@ -2,4 +2,6 @@
 The main package for the Pulumi Amplify project.
 """
 
-__all__ = []
+from .amplify_graphql_api import AmplifyGraphQLAPI
+
+__all__ = ["AmplifyGraphQLAPI"]

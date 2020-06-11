@@ -21,7 +21,7 @@ The project works like this:
 
 **To run this example:**
 
-* Install and start a VirtualEnv in this folder
+* Install and enter a VirtualEnv in this folder
 * Install the Pulumi requirements:
 
 ```
