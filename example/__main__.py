@@ -24,4 +24,4 @@ graphql_api = AmplifyGraphQLAPI(
     client_source_path="src",
 )
 
-pulumi.export("ResourceOutput2", 123)
+pulumi.export("graphql_api_uri", graphql_api.graphql_api_uri)

@@ -1,9 +1,11 @@
 from pathlib import Path
 from re import match
+from typing import List
 
 import pulumi
 from pulumi import ResourceOptions
-from pulumi_aws import appsync, config, dynamodb, iam
+from pulumi.output import Input, Output
+from pulumi_aws import appsync, cognito, config, dynamodb, iam
 from pulumi_aws.get_caller_identity import get_caller_identity
 
 from .amplify_exports_file import AmplifyExportsFile
@@ -16,14 +18,19 @@ class AmplifyGraphQLAPI(pulumi.ComponentResource):
     Pulumi.
     """
 
+    graphql_api_uri: Output[str]
+    """
+    The URI of the AppSync GraphQL API.
+    """
+
     def __init__(
         self,
-        name,
-        amplify_api_name,
-        graphql_types,
-        user_pool,
-        user_pool_client,
-        client_source_path="src",
+        name: str,
+        amplify_api_name: Input[str],
+        graphql_types: Input[List[str]],
+        user_pool: Input[cognito.UserPool],
+        user_pool_client: Input[cognito.UserPoolClient],
+        client_source_path: Input[str] = "src",
         opts=None,
     ):
         """
@@ -79,6 +86,8 @@ class AmplifyGraphQLAPI(pulumi.ComponentResource):
                 "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
             },
         )
+
+        self.set_outputs({"graphql_api_uri": graphql_api.uris["GRAPHQL"]})
 
     def generate_dynamo_data_source(self, graphql_api, type_name):
         """
@@ -209,3 +218,13 @@ class AmplifyGraphQLAPI(pulumi.ComponentResource):
                 resolvers.append(resolver)
 
         return resolvers
+
+    def set_outputs(self, outputs: dict):
+        """
+        Adds the Pulumi outputs as attributes on the current object so they can be
+        used as outputs by the caller, as well as registering them.
+        """
+        for output_name in outputs.keys():
+            setattr(self, output_name, outputs[output_name])
+
+        self.register_outputs(outputs)
