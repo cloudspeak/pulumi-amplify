@@ -34,6 +34,12 @@ pip install -r requirements.txt
 pip install -e ..
 ```
 
+* Initialize your Amplify environment (you may be promted to set up an AWS profile):
+
+```
+amplify init
+```
+
 * Deploy the stack:
 
 ```
@@ -45,4 +51,30 @@ pulumi up
 ```
 npm install
 npm start
+```
+
+You can now visit [`http://localhost:3000`](http://localhost:3000) in your browser to use the application.
+
+## Updating the schema
+
+The GraphQL schema is located in `amplify/backend/api/notespulumi/schema.graphql`.  If
+you change the schema, you will need to use Amplify to regenerate the backend resolvers
+and (optionally) the frontend request models:
+
+* Rebuild the backend schema and resolvers:
+
+```
+amplify api gql-compile
+```
+
+* Push the new backend configuration to AppSync:
+
+```
+pulumi up
+```
+
+* Rebuild the frontend request models into `src/graphql` (if you are using them):
+
+```
+amplify codegen
 ```
