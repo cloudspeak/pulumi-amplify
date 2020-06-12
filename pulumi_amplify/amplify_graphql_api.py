@@ -7,6 +7,7 @@ from pulumi_aws import appsync, config, dynamodb, iam
 from pulumi_aws.get_caller_identity import get_caller_identity
 
 from .amplify_exports_file import AmplifyExportsFile
+from .random_id import RandomId
 
 
 class AmplifyGraphQLAPI(pulumi.ComponentResource):
@@ -43,6 +44,7 @@ class AmplifyGraphQLAPI(pulumi.ComponentResource):
 
         self.amplify_api_name = amplify_api_name
         self.stack_name = amplify_api_name
+        self.random_chars = RandomId.generate(8)
         self.amplify_api_build_dir = (
             Path("amplify/backend/api").joinpath(amplify_api_name).joinpath("build")
         )
@@ -92,7 +94,7 @@ class AmplifyGraphQLAPI(pulumi.ComponentResource):
 
         table = dynamodb.Table(
             f"{self.stack_name}_{type_name}_table",
-            name=f"{self.stack_name}.{type_name}",
+            name=f"{self.stack_name}_{self.random_chars}.{type_name}",
             hash_key="id",
             attributes=[{"name": "id", "type": "S"}],
             # stream_view_type="NEW_AND_OLD_IMAGES",
@@ -151,7 +153,7 @@ class AmplifyGraphQLAPI(pulumi.ComponentResource):
         data_source = appsync.DataSource(
             f"{self.stack_name}_{type_name}_data_source",
             api_id=graphql_api.id,
-            name=f"{type_name}TableDataSource",
+            name=f"{type_name}TableDataSource_{self.random_chars}",
             type="AMAZON_DYNAMODB",
             service_role_arn=data_source_iam_role.arn,
             dynamodb_config={"table_name": table.name},
