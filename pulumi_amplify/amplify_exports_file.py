@@ -66,7 +66,9 @@ class AmplifyExportsFileProvider(ResourceProvider):
         ]
         exports_file_path = Path(inputs["exports_file_path"])
         exports_file_path.write_text("\n".join(file_content))
-        return CreateResult(exports_file_path.name, {})
+        return CreateResult(
+            exports_file_path.name, {"exports_file_path": inputs["exports_file_path"]}
+        )
 
     def diff(self, _id, olds, _news):
         return DiffResult(
@@ -74,4 +76,4 @@ class AmplifyExportsFileProvider(ResourceProvider):
         )
 
     def delete(self, _id, props):
-        Path(props.exports_file_path).unlink()
+        Path(props["exports_file_path"]).unlink()
